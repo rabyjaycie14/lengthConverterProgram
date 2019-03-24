@@ -12,7 +12,7 @@ namespace Project2
                IHandlerInterface SetNextObject(IHandlerInterface handler);
 
                //  Method for executing a request (conversion type)
-               object Handle(object request, double changeMe);
+               string Handle(string request, double changeMe);
           }
 
           // Handler Abstract Class
@@ -26,7 +26,7 @@ namespace Project2
                     return handler;
                }
 
-               public virtual object Handle(object request, double changeMe)
+               public virtual string Handle(string request, double changeMe)
                {
                     if (nextObject != null)
                     {
@@ -42,7 +42,7 @@ namespace Project2
           // Concrete class to handle kilometer to miles conversion
           class KilometersToMiles : AbstractHandler
           {
-               public override object Handle(object request, double changeMe)
+               public override string Handle(string request, double changeMe)
                {
                     if ((request as string) == "miles")
                     {
@@ -58,7 +58,7 @@ namespace Project2
           // Concrete clsas to handle kilometer to yards conversion
           class KilometersToYards : AbstractHandler
           {
-               public override object Handle(object request, double changeMe)
+               public override string Handle(string request, double changeMe)
                {
                     if ((request as string) == "yards")
                     {
@@ -74,7 +74,7 @@ namespace Project2
           // Concrete clsas to handle kilometer to feet conversion
           class KilometersToFeet : AbstractHandler
           {
-               public override object Handle(object request, double changeMe)
+               public override string Handle(string request, double changeMe)
                {
                     if ((request as string) == "feet")
                     {
@@ -96,7 +96,6 @@ namespace Project2
                     foreach (string ConversionType in new List<string> { "miles", "yards", "feet" })
                     {
                          double dummyValue = 4.4;
-
                          Console.WriteLine($"Client wants to convert {dummyValue} kilometers to {ConversionType} \n");
                          object result = handler.Handle(ConversionType, dummyValue);
 
