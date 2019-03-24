@@ -91,23 +91,18 @@ namespace Project2
           private class ClientRequest
           {
                // Overloaded Constructor
-               public static void ClientInput(AbstractHandler handler)
+               public static void ClientInput(AbstractHandler handler, string conversionType, double dummyValue)
                {
-                    foreach (string ConversionType in new List<string> { "miles", "yards", "feet" })
+                    Console.WriteLine($"Client wants to convert {dummyValue} kilometers to {conversionType} \n");
+                    object result = handler.Handle(conversionType, dummyValue);
+
+                    if (result != null)
                     {
-                         double dummyValue = 4.4;
-                         Console.WriteLine($"Client wants to convert {dummyValue} kilometers to {ConversionType} \n");
-                         object result = handler.Handle(ConversionType, dummyValue);
-
-                         if (result != null)
-                         {
-                              Console.Write($"Result: {result}\n");
-                         }
-                         else
-                         {
-                              Console.WriteLine($"{ConversionType} was not utilized.\n");
-                         }
-
+                         Console.Write($"Result: {result}\n");
+                    }
+                    else
+                    {
+                         Console.WriteLine($"{conversionType} was not utilized.\n");
                     }
                }
           }
@@ -121,7 +116,7 @@ namespace Project2
 
                miles.SetNextObject(yards).SetNextObject(feet);
 
-               ClientRequest.ClientInput(miles);
+               ClientRequest.ClientInput(miles, "feet", 4.4);
                Console.WriteLine();
           }
      }
