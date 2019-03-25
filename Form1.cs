@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LengthConverter
@@ -28,7 +21,7 @@ namespace LengthConverter
           }
 
           // Handler Abstract Class
-          private abstract class AbstractHandler : IHandlerInterface
+          public abstract class AbstractHandler : IHandlerInterface
           {
                protected IHandlerInterface nextObject;
 
@@ -52,7 +45,7 @@ namespace LengthConverter
           }
 
           // Concrete class to handle kilometer to miles conversion
-          class KilometersToMiles : AbstractHandler
+          private class KilometersToMiles : AbstractHandler
           {
                public override string Handle(string request, double changeMe)
                {
@@ -70,7 +63,7 @@ namespace LengthConverter
           }
 
           // Concrete clsas to handle kilometer to yards conversion
-          class KilometersToYards : AbstractHandler
+          private class KilometersToYards : AbstractHandler
           {
                public override string Handle(string request, double changeMe)
                {
@@ -88,7 +81,7 @@ namespace LengthConverter
           }
 
           // Concrete clsas to handle kilometer to feet conversion
-          class KilometersToFeet : AbstractHandler
+          private class KilometersToFeet : AbstractHandler
           {
                public override string Handle(string request, double changeMe)
                {
@@ -106,7 +99,7 @@ namespace LengthConverter
           }
 
           // Details of Client Request
-          class ClientRequest
+          private class ClientRequest
           {
                // Overloaded Constructor
                public static string ClientInput(AbstractHandler handler, string conversionType, double dummyValue)
@@ -125,6 +118,65 @@ namespace LengthConverter
                }
           }
 
+          public abstract class Decorator : AbstractHandler
+          {
+               protected AbstractHandler _handler;
+
+               public Decorator(AbstractHandler handler)
+               {
+                    _handler = handler;
+               }
+
+               public override string Handle(string request, double changeMe)
+               {
+                    if (_handler != null)
+                    {
+                         return _handler.Handle(request, changeMe);
+                    }
+                    else
+                    {
+                         return string.Empty;
+                    }
+               }
+          }
+
+          public class roundedDecorator : Decorator
+          {
+               public roundedDecorator(AbstractHandler handler) : base(handler)
+               {
+               }
+
+               public override string Handle(string request, double changeMe)
+               {
+                    return $"roundedDecorator({base.Handle(request, changeMe)})";
+               }
+          }
+
+          public class exponentDecorator : Decorator
+          {
+               public exponentDecorator(AbstractHandler handler) : base(handler)
+               {
+               }
+
+               public override string Handle(string request, double changeMe)
+               {
+                    return $"exponentDecorator({base.Handle(request, changeMe)})";
+               }
+          }
+
+          public class addUnitNameDecorator : Decorator
+          {
+               public addUnitNameDecorator(AbstractHandler handler) : base(handler)
+               {
+               }
+
+               public override string Handle(string request, double changeMe)
+               {
+                    return $"addUnitNameDecorator({base.Handle(request, changeMe)})";
+
+               }
+          }
+
           private void label1_Click(object sender, EventArgs e)
           {
           }
@@ -136,13 +188,15 @@ namespace LengthConverter
                string text = comboBox1.GetItemText(comboBox1.SelectedItem); //get item the user selects in the combo box
 
                //Create the chain links
-               var miles = new KilometersToMiles();
-               var yards = new KilometersToYards();
-               var feet = new KilometersToFeet();
+               KilometersToMiles miles = new KilometersToMiles();
+               KilometersToYards yards = new KilometersToYards();
+               KilometersToFeet feet = new KilometersToFeet();
 
                miles.SetNextObject(yards).SetNextObject(feet);
                string finalResult = ClientRequest.ClientInput(miles, text, input);
                textBox2.AppendText(finalResult);
+
+
 
           }
 
