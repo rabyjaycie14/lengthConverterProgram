@@ -1,5 +1,5 @@
 # lengthConverterProgram
-Software Architecture and Design Patterns | University of Michigan-Dearborn | Dearborn, MI | 2019
+Software Architecture and Design Patterns | University of Michigan-Dearborn | Dearborn, MI | 2019 </br>
    { All verbiage in this document (unless otherwise stated) was provided as project specifications in CIS 476 by Professor Xhu at University of Michigan- Dearborn }
 
 # Chain of Responsibility Design Pattern 
