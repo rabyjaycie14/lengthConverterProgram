@@ -24,9 +24,9 @@ This pattern is recommended when multiple objects can handle a request and the h
 
 # Implementation Information - Part 2
 "The text appearing in the output field of the LCP UI is a string that has to undergo three decorations:
-      1) Round output to 2nd decimal (e.g., 218.723 to 218.72)
-      2) Write output in exp. notation (e.g., 218.72 to 2.1872e2 )
-      3) Add the unit name to the converted amount (e.g., 2.1872e2 to 2.1872e2 Yards)."
+   1) Round output to 2nd decimal (e.g., 218.723 to 218.72) <br/>
+   2) Write output in exp. notation (e.g., 218.72 to 2.1872e2 )
+   3) Add the unit name to the converted amount (e.g., 2.1872e2 to 2.1872e2 Yards)."
 
 # Source
   "Chain of Responsibility Design Pattern." GeeksForGeeks.com, www.geeksforgeeks.org/chain-responsibility-design-pattern/. Accessed 20 Mar. 2019. 
