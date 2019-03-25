@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace Project2
+
+namespace addDecorator
 {
      internal class Program
      {
@@ -16,7 +16,7 @@ namespace Project2
           }
 
           // Handler Abstract Class
-          private abstract class AbstractHandler : IHandlerInterface
+          public abstract class AbstractHandler : IHandlerInterface
           {
                protected IHandlerInterface nextObject;
 
@@ -40,13 +40,14 @@ namespace Project2
           }
 
           // Concrete class to handle kilometer to miles conversion
-          class KilometersToMiles : AbstractHandler
+          private class KilometersToMiles : AbstractHandler
           {
                public override string Handle(string request, double changeMe)
                {
                     if ((request as string) == "miles")
                     {
-                         return (changeMe/1.609) + " miles\n";
+                         var output = (changeMe / 1.609).ToString();
+                         return output ;
                     }
                     else
                     {
@@ -56,13 +57,14 @@ namespace Project2
           }
 
           // Concrete clsas to handle kilometer to yards conversion
-          class KilometersToYards : AbstractHandler
+          private class KilometersToYards : AbstractHandler
           {
                public override string Handle(string request, double changeMe)
                {
                     if ((request as string) == "yards")
                     {
-                         return (changeMe*1093.61) + " yards\n";
+                         var output = (changeMe * 1093.61).ToString();
+                         return output;
                     }
                     else
                     {
@@ -72,13 +74,14 @@ namespace Project2
           }
 
           // Concrete clsas to handle kilometer to feet conversion
-          class KilometersToFeet : AbstractHandler
+          private class KilometersToFeet : AbstractHandler
           {
                public override string Handle(string request, double changeMe)
                {
                     if ((request as string) == "feet")
                     {
-                         return (changeMe*3280.84) + " feet\n";
+                         var output = (changeMe * 3280.84).ToString();
+                         return output;
                     }
                     else
                     {
@@ -87,8 +90,83 @@ namespace Project2
                }
           }
 
+          // Decorator Abstract Class
+          // Extends AbstractHandler class to be interchangeable with
+          // its concrete decorators
+          public abstract class Decorator : AbstractHandler
+          {
+               public abstract override string Handle(string request, double changeMe);
+          }
+
+          // Concrete decorator class used to round output to 2 decimal places
+          public class rounded2DecimalPlaces : Decorator
+          {
+               private AbstractHandler handler;
+
+               public rounded2DecimalPlaces()
+               {
+               }
+
+               public rounded2DecimalPlaces(AbstractHandler handler)
+               {
+                    this.handler = handler;
+               }
+
+               public override string Handle(string request, double changeMe)
+               {
+                    string token = handler.Handle(request, changeMe).ToString();
+                    decimal newToken = decimal.Parse(token);
+                    string output = newToken.ToString("F2");
+                    return output;
+               }
+          }
+
+          // Concrete decorator class used to convert output to exponential notation
+          public class expNotation : Decorator
+          {
+               private AbstractHandler handler;
+
+               public expNotation()
+               {
+               }
+
+               public expNotation(AbstractHandler handler)
+               {
+                    this.handler = handler;
+               }
+
+               public override string Handle(string request, double changeMe)
+               {
+                    string token = handler.Handle(request, changeMe).ToString();
+                    decimal newToken = decimal.Parse(token);
+                    string output = newToken.ToString("#0.0e0");
+                    return output;
+               }
+          }
+
+          public class addUnitName : Decorator
+          {
+               private AbstractHandler handler;
+
+               public addUnitName()
+               {
+               }
+
+               public addUnitName(AbstractHandler handler)
+               {
+                    this.handler = handler;
+               }
+
+               public override string Handle(string request, double changeMe)
+               {
+                    string token = handler.Handle(request, changeMe).ToString();
+                    return token + " " + request;
+               }
+          }
+
+
           // Details of Client Request
-          private class ClientRequest
+          public class ClientRequest
           {
                // Overloaded Constructor
                public static void ClientInput(AbstractHandler handler, string conversionType, double dummyValue)
@@ -110,14 +188,19 @@ namespace Project2
           private static void Main(string[] args)
           {
                //Create the chain links
-               var miles = new KilometersToMiles();
-               var yards = new KilometersToYards();
-               var feet = new KilometersToFeet();
+               AbstractHandler miles = new KilometersToMiles();
+               AbstractHandler yards = new KilometersToYards();
+               AbstractHandler feet = new KilometersToFeet();
 
                miles.SetNextObject(yards).SetNextObject(feet);
 
-               ClientRequest.ClientInput(miles, "feet", 4.4);
+               ClientRequest.ClientInput(miles, "miles", 1);
                Console.WriteLine();
+
+               miles = new rounded2DecimalPlaces(miles);
+               miles = new expNotation(miles);
+               miles = new addUnitName(miles);
+               ClientRequest.ClientInput(miles, "miles", 47);
           }
      }
 }
